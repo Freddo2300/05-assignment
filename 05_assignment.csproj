@@ -15,7 +15,8 @@
   </ItemGroup>
   
   <ItemGroup>
-    <CSFile Include="./src/App.cs"/>
+    <CSFile Include="./src/App.cs" />
+    <CodeFiles Include="./src/**/*.cs" />
   </ItemGroup>
 
 </Project>
