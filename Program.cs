@@ -1,5 +1,4 @@
-﻿using Dapper;
-using MySqlConnector;
+﻿using Chinook.Src;
 
 namespace Chinook
 {
@@ -7,7 +6,7 @@ namespace Chinook
     {
         public static void Main(string[] args)
         {
-
+            App.Start();
         }
     }
 }
