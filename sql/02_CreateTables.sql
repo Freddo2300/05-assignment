@@ -2,7 +2,7 @@
 USE chinook;
 
 CREATE TABLE superheroes(
-    id INT NOT NULL AUTO_INCREMENT,
+    id INT NOT NULL IDENTITY(1,1),
     name VARCHAR(255),
     alias VARCHAR(255),
     origin VARCHAR(255),
@@ -11,7 +11,7 @@ CREATE TABLE superheroes(
 );
 
 CREATE TABLE assistants(
-    id INT NOT NULL AUTO_INCREMENT,
+    id INT NOT NULL IDENTITY(1,1),
     superhero_id INT,
     name VARCHAR(255),
     PRIMARY KEY(id),
@@ -19,7 +19,7 @@ CREATE TABLE assistants(
 );
 
 CREATE TABLE powers(
-    id INT NOT NULL AUTO_INCREMENT,
+    id INT NOT NULL IDENTITY(1,1),
     name VARCHAR(255),
     description TEXT,
     PRIMARY KEY(id),
