@@ -4,6 +4,13 @@ namespace Chinook.Src.Utils
 {
     class SpectreUtils
     {
+        /// <summary>
+        /// Convenience function to generate table
+        /// </summary>
+        /// <param name="columns"></param>
+        /// <param name="rows"></param>
+        /// <param name="title"></param>
+        /// <returns></returns>
         public static Table CreateTable(
             string[] columns,
             List<string[]> rows,
