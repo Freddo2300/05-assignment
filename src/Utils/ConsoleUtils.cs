@@ -1,9 +1,11 @@
 using System.Text;
+using System.Linq;
 using Spectre.Console;
 
 using Chinook.Src.Model;
 using Chinook.Src.Repositories;
 using Chinook.Src.Repositories.CustomerRepo;
+using Dapper;
 
 namespace Chinook.Src.Utils
 {   
@@ -175,6 +177,9 @@ namespace Chinook.Src.Utils
             }
         }
 
+        /// <summary>
+        /// AnsiConsole print all of the customers
+        /// </summary>
         public static void DisplayAllCustomers()
         {   
             ICustomer customerService = new CustomerService(new ChinookContext());
@@ -195,13 +200,103 @@ namespace Chinook.Src.Utils
                     customer.CustomerId.ToString(),
                     customer.FirstName,
                     customer.LastName,
-                    customer.Country!,
-                    customer.PostalCode!,
-                    customer.Phone!,
+                    customer.Country ?? "-",
+                    customer.PostalCode ?? "-",
+                    customer.Phone ?? "-",
                     customer.Email
                 );
             }
             AnsiConsole.Write(table);
+        }
+
+        public void DisplayCustomerById()
+        {   
+            ICustomer customerService = new CustomerService(new ChinookContext());
+
+            int id;
+
+            do
+            {
+                id = AnsiConsole.Ask<int>("ENTER [blue bold]customer id[/] [0 to return]: ");
+
+                var table = new Table()
+                .AddColumn("Id")
+                .AddColumn("First Name")
+                .AddColumn("Last Name")
+                .AddColumn("Country")
+                .AddColumn("Postal Code")
+                .AddColumn("Phone")
+                .AddColumn("Email");
+
+                // TODO: Insert id into service from marc
+                // Customer customer = customerService.GetCustomerById(id);
+
+                if (customer == null)
+                    {
+                        AnsiConsole.WriteLine($"No customer found by id {id}");
+                        break;
+                    }
+
+                table.AddRow(
+                    customer.CustomerId.ToString(),
+                    customer.FirstName,
+                    customer.LastName,
+                    customer.Country ?? "-",
+                    customer.PostalCode ?? "-",
+                    customer.Phone ?? "-",
+                    customer.Email
+                );
+
+                AnsiConsole.Write(table);
+
+            } while (id != 0);
+            
+            AnsiConsole.Write("Ok bye");
+        }
+
+        public void DisplayCustomersByName()
+        {
+            ICustomer customerService = new CustomerService(new ChinookContext());
+            
+            string name;
+
+            do
+            {
+                name = AnsiConsole.Ask<string>("ENTER the [blue bold]customer name[/]: ");
+
+                var table = new Table()
+                .AddColumn("Id")
+                .AddColumn("First Name")
+                .AddColumn("Last Name")
+                .AddColumn("Country")
+                .AddColumn("Postal Code")
+                .AddColumn("Phone")
+                .AddColumn("Email");
+
+                // TODO: Insert id into service from marc
+                // Customer customer = customerService.GetCustomerById(id);
+
+                if (customer == null)
+                    {
+                        AnsiConsole.WriteLine($"No customer found by name {name}");
+                        break;
+                    }
+
+                table.AddRow(
+                    customer.CustomerId.ToString(),
+                    customer.FirstName,
+                    customer.LastName,
+                    customer.Country ?? "-",
+                    customer.PostalCode ?? "-",
+                    customer.Phone ?? "-",
+                    customer.Email
+                );
+
+                AnsiConsole.Write(table);
+
+            } while (id != 0);
+            
+            AnsiConsole.Write("Ok bye");
         }
     }
 }
