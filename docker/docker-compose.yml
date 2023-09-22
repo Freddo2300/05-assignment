@@ -6,7 +6,7 @@ services:
     image: usildevops/mssql-docker-enhanced
     container_name: mssql-db
     volumes: 
-      - ./sql/Chinook_SqlServer_AutoIncrementPKs.sql:/docker-entrypoint-initdb.d/chinook.sql
+      - ./dbdata:/var/opt/mssql/data
     command: 'bash /entrypoint.sh &'
     restart: always
     ports: 
