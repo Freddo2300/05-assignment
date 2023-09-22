@@ -1,6 +1,10 @@
 using System.Text;
 using Spectre.Console;
 
+using Chinook.Src.Model;
+using Chinook.Src.Repositories;
+using Chinook.Src.Repositories.CustomerRepo;
+
 namespace Chinook.Src.Utils
 {   
     // Enum for menu options
@@ -42,7 +46,10 @@ namespace Chinook.Src.Utils
                             break;
                         }
                     case MenuOptions.Read:
-                        break;
+                        {
+                            ReadMenu();
+                            break;
+                        }
                     case MenuOptions.Update:
                         break;
                     case MenuOptions.Delete:
@@ -133,7 +140,7 @@ namespace Chinook.Src.Utils
                     case "All customers":
                     {
                         // Implement function to get all customers and display in console
-                        
+                        DisplayAllCustomers();
                         break;
                     }
                     case "By limit and offset":
@@ -166,6 +173,35 @@ namespace Chinook.Src.Utils
             {
                 AnsiConsole.Write(e.Message);
             }
+        }
+
+        public static void DisplayAllCustomers()
+        {   
+            ICustomer customerService = new CustomerService(new ChinookContext());
+            ICollection<Customer> customers = customerService.GetAll();
+
+            var table = new Table()
+                .AddColumn("Id")
+                .AddColumn("First Name")
+                .AddColumn("Last Name")
+                .AddColumn("Country")
+                .AddColumn("Postal Code")
+                .AddColumn("Phone")
+                .AddColumn("Email");
+
+            foreach (Customer customer in customers)
+            {
+                table.AddRow(
+                    customer.CustomerId.ToString(),
+                    customer.FirstName,
+                    customer.LastName,
+                    customer.Country!,
+                    customer.PostalCode!,
+                    customer.Phone!,
+                    customer.Email
+                );
+            }
+            AnsiConsole.Write(table);
         }
     }
 }
