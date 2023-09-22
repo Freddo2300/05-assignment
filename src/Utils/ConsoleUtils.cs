@@ -154,11 +154,13 @@ namespace Chinook.Src.Utils
                         break;
                     }
                     case "By id":
-                    {
+                    {   
+                        DisplayCustomerById();
                         break;
                     }
                     case "By name":
                     {
+                        DisplayCustomerByName();
                         break;
                     }
                     case "By net spend":
@@ -209,7 +211,7 @@ namespace Chinook.Src.Utils
             AnsiConsole.Write(table);
         }
 
-        public void DisplayCustomerById()
+        public static void DisplayCustomerById()
         {   
             ICustomer customerService = new CustomerService(new ChinookContext());
 
@@ -217,7 +219,7 @@ namespace Chinook.Src.Utils
 
             do
             {
-                id = AnsiConsole.Ask<int>("ENTER [blue bold]customer id[/] [0 to return]: ");
+                id = AnsiConsole.Ask<int>("ENTER [blue bold]customer id[/] (0 to return): ");
 
                 var table = new Table()
                 .AddColumn("Id")
@@ -229,7 +231,7 @@ namespace Chinook.Src.Utils
                 .AddColumn("Email");
 
                 // TODO: Insert id into service from marc
-                // Customer customer = customerService.GetCustomerById(id);
+                Customer customer = customerService.GetById(id);
 
                 if (customer == null)
                     {
@@ -254,7 +256,7 @@ namespace Chinook.Src.Utils
             AnsiConsole.Write("Ok bye");
         }
 
-        public void DisplayCustomersByName()
+        public static void DisplayCustomerByName()
         {
             ICustomer customerService = new CustomerService(new ChinookContext());
             
@@ -262,7 +264,7 @@ namespace Chinook.Src.Utils
 
             do
             {
-                name = AnsiConsole.Ask<string>("ENTER the [blue bold]customer name[/]: ");
+                name = AnsiConsole.Ask<string>("ENTER the [blue bold]customer name[/] (q to return): ");
 
                 var table = new Table()
                 .AddColumn("Id")
@@ -273,8 +275,7 @@ namespace Chinook.Src.Utils
                 .AddColumn("Phone")
                 .AddColumn("Email");
 
-                // TODO: Insert id into service from marc
-                // Customer customer = customerService.GetCustomerById(id);
+                Customer customer = customerService.GetByName(name);
 
                 if (customer == null)
                     {
@@ -294,7 +295,7 @@ namespace Chinook.Src.Utils
 
                 AnsiConsole.Write(table);
 
-            } while (id != 0);
+            } while (name != "q");
             
             AnsiConsole.Write("Ok bye");
         }

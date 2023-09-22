@@ -1,4 +1,6 @@
 ﻿using Chinook.Src;
+using Chinook.Src.Repositories.CustomerRepo;
+using Chinook.Src.Model;
 
 namespace Chinook
 {
@@ -6,7 +8,9 @@ namespace Chinook
     {
         public static void Main(string[] args)
         {
+
             App.Start();
+            
         }
     }
 }

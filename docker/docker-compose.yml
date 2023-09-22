@@ -15,9 +15,9 @@ services:
       ACCEPT_EULA: 'Y'
       MSSQL_USER: sa
       MSSQL_SA_PASSWORD: 'MyStrongPassword123'
-      #healthcheck:
-      #test: cat /var/log/docker/sqlserver_db_init.log | grep [db_init_completed]
-      #interval: 10s
-      #timeout: 3s
-      #retries: 10
-      #start_period: 10s 
+    healthcheck:
+      test: cat /var/log/docker/sqlserver_db_init.log | grep [db_init_completed]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s 
