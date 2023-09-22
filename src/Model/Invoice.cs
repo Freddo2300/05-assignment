@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CreateAndAccessDatabase.Model;
+namespace Chinook.Src.Model;
 
 public partial class Invoice
 {
