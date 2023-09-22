@@ -104,7 +104,33 @@ namespace Chinook.Src.Utils
                 AnsiConsole.Write(e.Message);
             }
         }
+        public static void DisplayAllCustomers()
+        {
+            var customers = GetAllCustomers();
 
+            var table = new Table()
+                .AddColumn("Id")
+                .AddColumn("First Name")
+                .AddColumn("Last Name")
+                .AddColumn("Country")
+                .AddColumn("Postal Code")
+                .AddColumn("Phone")
+                .AddColumn("Email");
+
+            foreach (var customer in customers)
+            {
+                table.AddRow(
+                    customer.Id.ToString(),
+                    customer.FirstName,
+                    customer.LastName,
+                    customer.Country,
+                    customer.PostalCode,
+                    customer.PhoneNumber,
+                    customer.Email
+                );
+            }
+            AnsiConsole.Render(table);
+        }
         public static void ReadMenu()
         {
             try
@@ -132,9 +158,17 @@ namespace Chinook.Src.Utils
                 {
                     case "All customers":
                     {
-                        // Implement function to get all customers and display in console
-                        
-                        break;
+
+                                // Implement function to get all customers and display in console
+                                switch (selection)
+                                {
+                                    case "All customers":
+                                        DisplayAllCustomers();
+                                        break;
+                                        
+                                }
+
+                                break;
                     }
                     case "By limit and offset":
                     {
@@ -167,5 +201,19 @@ namespace Chinook.Src.Utils
                 AnsiConsole.Write(e.Message);
             }
         }
+
+        // TODO: Display all customers
+        public static List<Customer> GetAllCustomers()
+        {
+            // Placeholder: Fetch this data from your database.
+            return new List<Customer>
+    {
+        new Customer { Id = 1, FirstName = "John", LastName = "Doe", ... },
+        //... other mock customers
+    };
+        }
+
+
+        // TODO: Display customers with limit and 
     }
 }
