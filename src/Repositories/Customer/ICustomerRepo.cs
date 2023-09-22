@@ -1,3 +1,5 @@
+using System.Linq;
+
 using Chinook.Src.Model;
 
 namespace Chinook.Src.Repositories.CustomerRepo

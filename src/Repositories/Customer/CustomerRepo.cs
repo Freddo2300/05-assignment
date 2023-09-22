@@ -1,3 +1,5 @@
+using System.Linq;
+using Microsoft.EntityFrameworkCore.Internal;
 using Chinook.Src.Model;
 using Chinook.Src.Exceptions;
 using System.Data.SqlClient;
@@ -11,7 +13,7 @@ namespace Chinook.Src.Repositories.CustomerRepo
         public CustomerService()
         {
             builder = new SqlConnectionStringBuilder
-            {       
+            {
                 DataSource = "localhost,1433",
                 InitialCatalog = "Chinook",
                 UserID = "sa",
@@ -20,7 +22,8 @@ namespace Chinook.Src.Repositories.CustomerRepo
             };
         }
 
-        public List<Customer> GetAll(){
+        public List<Customer> GetAll()
+        {
             List<Customer> customers = new List<Customer>();
             string connectionString = builder.ConnectionString;
             string sql = @"SELECT * FROM Customer";
@@ -28,22 +31,23 @@ namespace Chinook.Src.Repositories.CustomerRepo
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                using ( SqlCommand command = new SqlCommand(sql, conn))
+                using (SqlCommand command = new SqlCommand(sql, conn))
                 {
-                    using (SqlDataReader reader = command.ExecuteReader()){
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
                         while (reader.Read())
                         {
                             Customer customer = new Customer
-                        {
-                            CustomerId = reader.GetInt32(0),
-                            FirstName = !reader.IsDBNull(1) ? reader.GetString(1) : "",
-                            LastName = !reader.IsDBNull(2) ? reader.GetString(2) : "",
-                            Country = !reader.IsDBNull(3) ? reader.GetString(3) : "",
-                            PostalCode = !reader.IsDBNull(4) ? reader.GetString(4) : "",
-                            Phone = !reader.IsDBNull(5) ? reader.GetString(5) : "",
-                            Email = !reader.IsDBNull(6) ? reader.GetString(6) : ""
-                        };
-                        customers.Add(customer);
+                            {
+                                CustomerId = reader.GetInt32(0),
+                                FirstName = !reader.IsDBNull(1) ? reader.GetString(1) : "",
+                                LastName = !reader.IsDBNull(2) ? reader.GetString(2) : "",
+                                Country = !reader.IsDBNull(7) ? reader.GetString(7) : "",
+                                PostalCode = !reader.IsDBNull(8) ? reader.GetString(8) : "",
+                                Phone = !reader.IsDBNull(9) ? reader.GetString(9) : "",
+                                Email = !reader.IsDBNull(11) ? reader.GetString(11) : ""
+                            };
+                            customers.Add(customer);
                         }
                     }
                 }
@@ -51,19 +55,21 @@ namespace Chinook.Src.Repositories.CustomerRepo
             return customers;
         }
 
-        public Customer GetByName(string name){
+        public Customer GetByName(string name)
+        {
             Customer customer = new();
             string connectionString = builder.ConnectionString;
             string sql = $"SELECT * FROM Customer WHERE FirstName = @FirstName";
-            try 
+            try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    using ( SqlCommand command = new SqlCommand(sql, conn))
+                    using (SqlCommand command = new SqlCommand(sql, conn))
                     {
                         command.Parameters.AddWithValue("@FirstName", name);
-                        using (SqlDataReader reader = command.ExecuteReader()){
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
                             while (reader.Read())
                             {
                                 customer = new Customer
@@ -71,36 +77,40 @@ namespace Chinook.Src.Repositories.CustomerRepo
                                     CustomerId = reader.GetInt32(0),
                                     FirstName = !reader.IsDBNull(1) ? reader.GetString(1) : "",
                                     LastName = !reader.IsDBNull(2) ? reader.GetString(2) : "",
-                                    Country = !reader.IsDBNull(3) ? reader.GetString(3) : "",
-                                    PostalCode = !reader.IsDBNull(4) ? reader.GetString(4) : "",
-                                    Phone = !reader.IsDBNull(5) ? reader.GetString(5) : "",
-                                    Email = !reader.IsDBNull(6) ? reader.GetString(6) : ""
+                                    Country = !reader.IsDBNull(7) ? reader.GetString(7) : "",
+                                    PostalCode = !reader.IsDBNull(8) ? reader.GetString(8) : "",
+                                    Phone = !reader.IsDBNull(9) ? reader.GetString(9) : "",
+                                    Email = !reader.IsDBNull(11) ? reader.GetString(11) : ""
                                 };
                                 break;
                             }
                         }
                     }
                 }
-            } catch(SqlException sqlEx) {
+            }
+            catch (SqlException sqlEx)
+            {
                 System.Console.WriteLine(sqlEx);
             }
-            
-            return customer;
-        }        
 
-        public Customer GetById(int id){
+            return customer;
+        }
+
+        public Customer GetById(int id)
+        {
             Customer customer = new();
             string connectionString = builder.ConnectionString;
             string sql = $"SELECT * FROM Customer WHERE CustomerID = @CustomerID";
-            try 
+            try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    using ( SqlCommand command = new SqlCommand(sql, conn))
+                    using (SqlCommand command = new SqlCommand(sql, conn))
                     {
                         command.Parameters.AddWithValue("@CustomerID", id);
-                        using (SqlDataReader reader = command.ExecuteReader()){
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
                             while (reader.Read())
                             {
                                 customer = new Customer
@@ -108,24 +118,27 @@ namespace Chinook.Src.Repositories.CustomerRepo
                                     CustomerId = reader.GetInt32(0),
                                     FirstName = !reader.IsDBNull(1) ? reader.GetString(1) : "",
                                     LastName = !reader.IsDBNull(2) ? reader.GetString(2) : "",
-                                    Country = !reader.IsDBNull(3) ? reader.GetString(3) : "",
-                                    PostalCode = !reader.IsDBNull(4) ? reader.GetString(4) : "",
-                                    Phone = !reader.IsDBNull(5) ? reader.GetString(5) : "",
-                                    Email = !reader.IsDBNull(6) ? reader.GetString(6) : ""
+                                    Country = !reader.IsDBNull(7) ? reader.GetString(7) : "",
+                                    PostalCode = !reader.IsDBNull(8) ? reader.GetString(8) : "",
+                                    Phone = !reader.IsDBNull(9) ? reader.GetString(9) : "",
+                                    Email = !reader.IsDBNull(11) ? reader.GetString(11) : ""
                                 };
-                            break;
+                                break;
                             }
                         }
                     }
                 }
-            } catch(SqlException sqlEx) {
+            }
+            catch (SqlException sqlEx)
+            {
                 System.Console.WriteLine(sqlEx);
             }
-            
+
             return customer;
         }
 
-        public List<Customer> GetCustomerPage(int limit, int offset){
+        public List<Customer> GetCustomerPage(int limit, int offset)
+        {
             List<Customer> customers = new List<Customer>();
             string connectionString = builder.ConnectionString;
             string sql = @"SELECT * FROM Customer 
@@ -135,23 +148,24 @@ namespace Chinook.Src.Repositories.CustomerRepo
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                using ( SqlCommand command = new SqlCommand(sql, conn))
+                using (SqlCommand command = new SqlCommand(sql, conn))
                 {
                     command.Parameters.AddWithValue("@Limit", limit);
                     command.Parameters.AddWithValue("@Offset", offset);
-                    using (SqlDataReader reader = command.ExecuteReader()){
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
                         while (reader.Read())
                         {
                             Customer customer = new Customer
-                                {
-                                    CustomerId = reader.GetInt32(0),
-                                    FirstName = !reader.IsDBNull(1) ? reader.GetString(1) : "",
-                                    LastName = !reader.IsDBNull(2) ? reader.GetString(2) : "",
-                                    Country = !reader.IsDBNull(3) ? reader.GetString(3) : "",
-                                    PostalCode = !reader.IsDBNull(4) ? reader.GetString(4) : "",
-                                    Phone = !reader.IsDBNull(5) ? reader.GetString(5) : "",
-                                    Email = !reader.IsDBNull(6) ? reader.GetString(6) : ""
-                                };
+                            {
+                                CustomerId = reader.GetInt32(0),
+                                FirstName = !reader.IsDBNull(1) ? reader.GetString(1) : "",
+                                LastName = !reader.IsDBNull(2) ? reader.GetString(2) : "",
+                                Country = !reader.IsDBNull(7) ? reader.GetString(7) : "",
+                                PostalCode = !reader.IsDBNull(8) ? reader.GetString(8) : "",
+                                Phone = !reader.IsDBNull(9) ? reader.GetString(9) : "",
+                                Email = !reader.IsDBNull(11) ? reader.GetString(11) : ""
+                            };
                             customers.Add(customer);
                         }
                     }
@@ -160,7 +174,8 @@ namespace Chinook.Src.Repositories.CustomerRepo
             return customers;
         }
 
-        public bool Add(Customer customer) {
+        public bool Add(Customer customer)
+        {
             bool success = false;
             string connectionString = builder.ConnectionString;
             string sql = @"INSERT INTO Customer (FirstName, LastName, Country, PostalCode, Phone, Email)
@@ -168,7 +183,7 @@ namespace Chinook.Src.Repositories.CustomerRepo
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                using ( SqlCommand command = new SqlCommand(sql, conn))
+                using (SqlCommand command = new SqlCommand(sql, conn))
                 {
                     //command.Parameters.AddWithValue("@CustomerId", customer.CustomerId);
                     command.Parameters.AddWithValue("@Firstname", customer.FirstName);
@@ -182,7 +197,7 @@ namespace Chinook.Src.Repositories.CustomerRepo
             }
             return success;
         }
-        
+
         public bool Update(Customer customer)
         {
             bool success = false;
@@ -198,7 +213,7 @@ namespace Chinook.Src.Repositories.CustomerRepo
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                using ( SqlCommand command = new SqlCommand(sql, conn))
+                using (SqlCommand command = new SqlCommand(sql, conn))
                 {
                     command.Parameters.AddWithValue("@CustomerId", customer.CustomerId);
                     command.Parameters.AddWithValue("@Firstname", customer.FirstName);
@@ -213,9 +228,9 @@ namespace Chinook.Src.Repositories.CustomerRepo
             return success;
         }
 
-        public Dictionary<string, int> CustomerCountry(){
+        public Dictionary<string, int> CustomerCountry()
+        {
             Dictionary<string, int> countryCount = new();
-            List<Customer> customers = new List<Customer>();
             string connectionString = builder.ConnectionString;
             string sql = @"SELECT Country, count(Country) FROM Customer
                           GROUP by Country
@@ -224,19 +239,23 @@ namespace Chinook.Src.Repositories.CustomerRepo
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                using ( SqlCommand command = new SqlCommand(sql, conn))
+                using (SqlCommand command = new SqlCommand(sql, conn))
                 {
-                    using (SqlDataReader reader = command.ExecuteReader()){
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
                         while (reader.Read())
                         {
-                            countryCount.Add(reader.GetString(0), reader.GetInt32(1));
+                            countryCount.Add(
+                                !reader.IsDBNull(0) ? reader.GetString(0) : "", 
+                                !reader.IsDBNull(1) ? reader.GetInt32(1) : 0);
                         }
                     }
                 }
             }
             return countryCount;
         }
-        public Dictionary<string, decimal> BigSpenders(){
+        public Dictionary<string, decimal> BigSpenders()
+        {
             Dictionary<string, decimal> countryCount = new();
             List<Customer> customers = new List<Customer>();
             string connectionString = builder.ConnectionString;
@@ -249,9 +268,10 @@ namespace Chinook.Src.Repositories.CustomerRepo
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                using ( SqlCommand command = new SqlCommand(sql, conn))
+                using (SqlCommand command = new SqlCommand(sql, conn))
                 {
-                    using (SqlDataReader reader = command.ExecuteReader()){
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
                         while (reader.Read())
                         {
                             countryCount.Add(reader.GetString(0), reader.GetDecimal(1));
@@ -262,10 +282,11 @@ namespace Chinook.Src.Repositories.CustomerRepo
             return countryCount;
         }
 
-        public Tuple<int, int> FavoriteGenre(Customer customer){
-            Tuple<int, int> FavGenre =new Tuple<int, int>(0,0);
+        public Tuple<int, int> FavoriteGenre(Customer customer)
+        {
+            Tuple<int, int> FavGenre = new Tuple<int, int>(0, 0);
             string connectionString = builder.ConnectionString;
-            string sql =  @"WITH GenreCounts AS (
+            string sql = @"WITH GenreCounts AS (
                             SELECT
                                 Customer.CustomerId AS CustomerId,
                                 Genre.GenreId AS GenreId,
@@ -294,10 +315,11 @@ namespace Chinook.Src.Repositories.CustomerRepo
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                using ( SqlCommand command = new SqlCommand(sql, conn))
+                using (SqlCommand command = new SqlCommand(sql, conn))
                 {
                     command.Parameters.AddWithValue("@CustomerId", customer.CustomerId);
-                    using (SqlDataReader reader = command.ExecuteReader()){
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
                         while (reader.Read())
                         {
                             FavGenre = new Tuple<int, int>(reader.GetInt32(0), reader.GetInt32(1));
