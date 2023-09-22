@@ -37,12 +37,7 @@ public partial class ChinookContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer(
-            "Server=localhost,1433\\Catalog=Chinook;Database=Chinook;User=sa;Password=MyStrongPassword123;Trust Server Certificate=True", 
-                builder => builder.EnableRetryOnFailure(
-                    maxRetryCount: 2,
-                    maxRetryDelay: TimeSpan.FromSeconds(10),
-                    errorNumbersToAdd: null
-                )
+            "Server=localhost,1433\\Catalog=Chinook;Database=Chinook;User=sa;Password=MyStrongPassword123;Trust Server Certificate=True"
             );
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

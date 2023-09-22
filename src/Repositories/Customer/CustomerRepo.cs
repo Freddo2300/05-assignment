@@ -1,4 +1,7 @@
 using Chinook.Src.Model;
+using Chinook.Src.Exceptions;
+
+
 
 namespace Chinook.Src.Repositories.CustomerRepo
 {
@@ -12,7 +15,8 @@ namespace Chinook.Src.Repositories.CustomerRepo
         }
 
         public Customer GetByName(string name){
-            throw new NotImplementedException();
+            var customer = _context.Customers.Where(p => p.FirstName == name).FirstOrDefault();
+            return customer is null ? throw new CustomerException("Professor does not exist with that ID") : customer;
         }
 
         public ICollection<Customer> GetAll(){
@@ -20,7 +24,12 @@ namespace Chinook.Src.Repositories.CustomerRepo
         }
 
         public Customer GetById(int id){
-            throw new NotImplementedException();
+            var customer = _context.Customers.Where(p => p.CustomerId == id).FirstOrDefault();
+            return customer is null ? throw new CustomerException("Professor does not exist with that ID") : customer;
+        }
+
+        public ICollection<Customer> GetCustomerPage(int limit, int offset){
+            return _context.Customers.Skip(offset).Take(limit).ToHashSet();
         }
 
         public Customer Save(Customer customer) {
