@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace _05_assignment.Migrations
 {
     [DbContext(typeof(ChinookContext))]
-    [Migration("20230922092245_InitialCreate")]
+    [Migration("20230922161105_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

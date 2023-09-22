@@ -27,7 +27,7 @@ public partial class Customer
 
     public string? Fax { get; set; }
 
-    public string Email { get; set; } = null!;
+    public string Email { get; set; }
 
     public int? SupportRepId { get; set; }
 

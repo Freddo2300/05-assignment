@@ -43,7 +43,7 @@ namespace _05_assignment.Migrations
                     PostalCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
                     Phone = table.Column<string>(type: "nvarchar(24)", maxLength: 24, nullable: true),
                     Fax = table.Column<string>(type: "nvarchar(24)", maxLength: 24, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: true)
+                    Email = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false)
                 },
                 constraints: table =>
                 {
