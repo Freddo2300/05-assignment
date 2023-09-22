@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace CreateAndAccessDatabase.Model;
+namespace Chinook.Src.Model;
 
 public partial class ChinookContext : DbContext
 {
@@ -37,7 +37,7 @@ public partial class ChinookContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source = N-DK-01-01-6135\\SQLEXPRESS;\n             Initial Catalog = Chinook; Integrated Security = True;\n            Trust Server Certificate = True;");
+        => optionsBuilder.UseSqlServer("Server=localhost,1433\\Catalog=Chinook;Database=Chinook;User=sa;Password=MyStrongPassword123; Trust Server Certificate = True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
