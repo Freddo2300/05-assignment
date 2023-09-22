@@ -299,5 +299,13 @@ namespace Chinook.Src.Utils
             
             AnsiConsole.Write("Ok bye");
         }
+
+        // TODO : Get customers by country, descending
+
+        // TODO : Get customers by net spend
+
+        // TODO : Get paginated customers
+
+        // TODO : Update customer
     }
 }
