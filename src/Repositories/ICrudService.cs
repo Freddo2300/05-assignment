@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EFCoreClassAugust2023.Services
+namespace Chinook.Src.Repositories
 {
     internal interface ICrudService <T, TKey>
     {
