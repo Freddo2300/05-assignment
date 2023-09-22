@@ -8,9 +8,7 @@ namespace Chinook
     {
         public static void Main(string[] args)
         {
-
             App.Start();
-            
         }
     }
 }

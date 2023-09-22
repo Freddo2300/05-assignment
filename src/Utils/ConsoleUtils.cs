@@ -15,7 +15,6 @@ namespace Chinook.Src.Utils
         Create,
         Read,
         Update,
-        Delete,
         Exit
     }
 
@@ -26,7 +25,8 @@ namespace Chinook.Src.Utils
             MenuOptions selection;
 
             do
-            {   
+            {
+                // Display list of options for user that they can select from
                 AnsiConsole.WriteLine();
                 selection = AnsiConsole.Prompt(
                     new SelectionPrompt<MenuOptions>()
@@ -36,11 +36,11 @@ namespace Chinook.Src.Utils
                             MenuOptions.Create,
                             MenuOptions.Read,
                             MenuOptions.Update,
-                            MenuOptions.Delete,
                             MenuOptions.Exit
                         })
                 );
 
+                // Switch on the user selection, depending function call
                 switch (selection)
                 {
                     case MenuOptions.Create:
@@ -56,11 +56,6 @@ namespace Chinook.Src.Utils
                     case MenuOptions.Update:
                         {
                             UpdateCustomer();
-                            break;
-                        }
-                    case MenuOptions.Delete:
-                        {
-                            DeleteCustomer();
                             break;
                         }
                     default: break;
@@ -79,7 +74,7 @@ namespace Chinook.Src.Utils
         {
             try
             {
-                ICustomer customerService = new CustomerService(new ChinookContext());
+                ICustomer customerService = new CustomerService();
 
                 bool choice; // declare choice variable
 
@@ -94,6 +89,7 @@ namespace Chinook.Src.Utils
                 {
                     AnsiConsole.Clear();
 
+                    // Assign user input from Ask method
                     firstName = AnsiConsole.Ask<string>("ENTER [blue]first name[/]: ");
                     lastName = AnsiConsole.Ask<string>("ENTER [blue]last name[/]: ");
                     country = AnsiConsole.Ask<string>("ENTER [blue]country[/]: ");
@@ -119,6 +115,7 @@ namespace Chinook.Src.Utils
 
                     Console.Write(sb);
 
+                    // Confirm the user input with the user
                     choice = AnsiConsole.Confirm("Confirm and create user?");
                 } while (!choice);
 
@@ -132,7 +129,8 @@ namespace Chinook.Src.Utils
                     Email = email
                 };
 
-                customerService.Add(customer);
+                // Create new customer, if user confirmed
+                _ = customerService.Add(customer);
 
                 AnsiConsole.Clear();
             }
@@ -159,6 +157,7 @@ namespace Chinook.Src.Utils
                             "By limit and offset",
                             "By country",
                             "By id",
+                            "By id (most popular genre)",
                             "By name",
                             "By net spend",
                             "Exit"
@@ -174,13 +173,13 @@ namespace Chinook.Src.Utils
                                 break;
                             }
                         case "By limit and offset":
-                            {   
+                            {
                                 DisplayPaginatedCustomers();
                                 break;
                             }
                         case "By country":
                             {
-                                //DisplayCustomersByCountry();
+                                DisplayCustomersByCountry();
                                 break;
                             }
                         case "By id":
@@ -188,13 +187,18 @@ namespace Chinook.Src.Utils
                                 DisplayCustomerById();
                                 break;
                             }
+                        case "By id (most popular genre)":
+                        {
+                            DisplayCustomerMostPopularGenre();
+                            break;
+                        }
                         case "By name":
                             {
                                 DisplayCustomerByName();
                                 break;
                             }
                         case "By net spend":
-                            {   
+                            {
                                 DisplayCustomersByNetSpend();
                                 break;
                             }
@@ -215,8 +219,8 @@ namespace Chinook.Src.Utils
         /// </summary>
         public static void DisplayAllCustomers()
         {
-            ICustomer customerService = new CustomerService(new ChinookContext());
-            ICollection<Customer> customers = customerService.GetAll();
+            ICustomer customerService = new CustomerService();
+            List<Customer> customers = customerService.GetAll();
 
             var table = new Table()
                 .AddColumn("Id")
@@ -247,7 +251,7 @@ namespace Chinook.Src.Utils
         /// </summary>
         public static void DisplayCustomerById()
         {
-            ICustomer customerService = new CustomerService(new ChinookContext());
+            ICustomer customerService = new CustomerService();
 
             int id;
 
@@ -290,12 +294,49 @@ namespace Chinook.Src.Utils
             AnsiConsole.Write("Ok bye");
         }
 
+        public static void DisplayCustomerMostPopularGenre()
+        {
+            ICustomer customerService = new CustomerService();
+
+            int id;
+
+            do
+            {
+                id = AnsiConsole.Ask<int>("ENTER [blue bold]customer id[/] (0 to return): ");
+
+                var table = new Table()
+                .AddColumn("Id")
+                .AddColumn("Genre id");
+
+                // TODO: Insert id into service from marc
+                Customer customer = customerService.GetById(id);
+
+                if (customer == null)
+                {
+                    AnsiConsole.WriteLine($"No customer found by id {id}");
+                    break;
+                }
+
+                Tuple<int, int> customerGenre = customerService.FavoriteGenre(customer);
+
+                table.AddRow(
+                    customerGenre.Item1.ToString(),
+                    customerGenre.Item2.ToString()
+                );
+
+                AnsiConsole.Write(table);
+
+            } while (id != 0);
+
+            AnsiConsole.Write("Ok bye");
+        }
+
         /// <summary>
         /// READ CUSTOMER: by name
         /// </summary>
         public static void DisplayCustomerByName()
         {
-            ICustomer customerService = new CustomerService(new ChinookContext());
+            ICustomer customerService = new CustomerService();
 
             string name;
 
@@ -338,46 +379,43 @@ namespace Chinook.Src.Utils
             AnsiConsole.WriteLine();
         }
 
-        // TODO : Get customers by country, descending
-        /*
+
         public static void DisplayCustomersByCountry()
         {
-            ICustomer customerService = new CustomerService(new ChinookContext());
+            ICustomer customerService = new CustomerService();
 
-            Dictionary<string, int> customers = customerService.GetCustomersByCountry();
+            Dictionary<string, int> customers = customerService.CustomerCountry();
 
             var table = new Table()
                 .AddColumn("Country")
                 .AddColumn("Count");
             foreach (KeyValuePair<string, int> customer in customers)
             {
+                Console.WriteLine($"{customer.Key}:{customer.Value}");
                 table.AddRow(
-                    customer.Key,
-                    customer.Value.ToString()
+                    customer.Key ?? "din far",
+                    customer.Value.ToString() ?? "-"
                 );
             }
             AnsiConsole.Write(table);
         }
-        */
 
         // TODO : Get customers by net spend
         public static void DisplayCustomersByNetSpend()
         {
-            ICustomer customerService = new CustomerService(new ChinookContext());
+            ICustomer customerService = new CustomerService();
 
-            ICollection<CustomerInvoice> customers = customerService.GetCustomersByNetSpend();
+            Dictionary<string, decimal> customers = customerService.BigSpenders();
 
             var table = new Table()
-                .AddColumn("Id")
                 .AddColumn("First Name")
                 .AddColumn("Net spend");
 
-            foreach (CustomerInvoice customerInvoice in customers)
+            foreach (KeyValuePair<string, decimal> pair in customers)
             {
                 table.AddRow(
-                    customerInvoice.CustomerId.ToString(),
-                    customerInvoice.FirstName ?? "-",
-                    customerInvoice.Total.ToString() ?? "-"
+                    pair.Key ?? "-",
+                    pair.Value.ToString() ?? "-"
                 );
             }
             AnsiConsole.Write(table);
@@ -389,7 +427,7 @@ namespace Chinook.Src.Utils
         /// </summary>
         public static void DisplayPaginatedCustomers()
         {
-            ICustomer customerService = new CustomerService(new ChinookContext());
+            ICustomer customerService = new CustomerService();
 
             int offset;
             int limit;
@@ -398,7 +436,7 @@ namespace Chinook.Src.Utils
 
             do
             {
-                ICollection<Customer> customers = customerService.GetAll();
+                List<Customer> customers = customerService.GetAll();
 
                 offset = AnsiConsole.Ask<int>($"ENTER [bold blue]offset[/] (max {customers.Count}): ");
                 limit = AnsiConsole.Ask<int>($"ENTER [bold blue]limit[/] (max {customers.Count}): ");
@@ -409,7 +447,7 @@ namespace Chinook.Src.Utils
                     break;
                 }
 
-                ICollection<Customer> paginatedCustomers = customerService.GetCustomerPage(limit, offset);
+                List<Customer> paginatedCustomers = customerService.GetCustomerPage(limit, offset);
 
                 var table = new Table()
                 .AddColumn("Id")
@@ -449,13 +487,13 @@ namespace Chinook.Src.Utils
         /// </summary>
         public static void UpdateCustomer()
         {
-            ICustomer customerService = new CustomerService(new ChinookContext());
+            ICustomer customerService = new CustomerService();
 
             int id;
 
             do
             {
-                ICollection<Customer> customers = customerService.GetAll();
+                List<Customer> customers = customerService.GetAll();
 
                 id = AnsiConsole.Ask<int>($"ENTER [blue]customer id[/] of max {customers.Count} (0 to return): ");
 
@@ -496,7 +534,7 @@ namespace Chinook.Src.Utils
 
                             selectedCustomer.FirstName = value;
 
-                            customerService.Update(selectedCustomer);
+                            _ = customerService.Update(selectedCustomer);
 
                             break;
                         }
@@ -506,7 +544,17 @@ namespace Chinook.Src.Utils
 
                             selectedCustomer.LastName = value;
 
-                            customerService.Update(selectedCustomer);
+                            _ = customerService.Update(selectedCustomer);
+
+                            break;
+                        }
+                    case "Country":
+                        {
+                            string value = AnsiConsole.Ask<string>($"ENTER new [blue]{selection}[/]: ");
+
+                            selectedCustomer.Country = value;
+
+                            _ = customerService.Update(selectedCustomer);
 
                             break;
                         }
@@ -516,7 +564,7 @@ namespace Chinook.Src.Utils
 
                             selectedCustomer.PostalCode = value;
 
-                            customerService.Update(selectedCustomer);
+                            _ = customerService.Update(selectedCustomer);
 
                             break;
                         }
@@ -526,7 +574,7 @@ namespace Chinook.Src.Utils
 
                             selectedCustomer.Phone = value;
 
-                            customerService.Update(selectedCustomer);
+                            _ = customerService.Update(selectedCustomer);
 
                             break;
                         }
@@ -536,7 +584,7 @@ namespace Chinook.Src.Utils
 
                             selectedCustomer.Email = value;
 
-                            customerService.Update(selectedCustomer);
+                            _ = customerService.Update(selectedCustomer);
 
                             break;
                         }
@@ -552,6 +600,7 @@ namespace Chinook.Src.Utils
         /// <summary>
         /// Delete existing customer within database
         /// </summary>
+        /*
         public static void DeleteCustomer()
         {
             ICustomer customerService = new CustomerService(new ChinookContext());
@@ -587,5 +636,6 @@ namespace Chinook.Src.Utils
 
             customerService.Delete(selectedCustomer);
         }
+        */
     }
 }
