@@ -177,7 +177,7 @@ namespace Chinook.Src.Utils
 
         public static void DisplayAllCustomers()
         {   
-            ICustomer customerService = new CustomerService(new ChinookContext());
+            ICustomer customerService = new CustomerService();
             ICollection<Customer> customers = customerService.GetAll();
 
             var table = new Table()
